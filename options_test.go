@@ -20,7 +20,7 @@ func TestVersionList_Add_WithLimit(t *testing.T) {
 	assert.Error(t, err)
 
 	versionList := list.GetAll()
-	expectedList := []Version[string]{{1, "test"}, {2, "test2"}}
+	expectedList := []Version[string]{{Version: 1, Data: "test"}, {Version: 2, Data: "test2"}}
 	if !reflect.DeepEqual(list.GetAll(), expectedList) {
 		t.Errorf("Expected %v, got %v", expectedList, versionList)
 	}
