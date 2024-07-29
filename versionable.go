@@ -2,6 +2,7 @@ package go_versionable
 
 import (
 	"errors"
+	"time"
 
 	"github.com/emirpasic/gods/sets/linkedhashset"
 )
@@ -14,8 +15,9 @@ var (
 )
 
 type Version[Data comparable] struct {
-	Version VersionNum `json:"version"`
-	Data    Data       `json:"data"`
+	Version    VersionNum `json:"version"`
+	Data       Data       `json:"data"`
+	InsertedAt time.Time  `json:"inserted_at"`
 }
 
 type VersionNum int
@@ -79,8 +81,9 @@ func (vl *VersionList[Data]) Add(data Data) error {
 
 	version := vl.set.Size() + 1
 	node := Version[Data]{
-		Version: VersionNum(version),
-		Data:    data,
+		Version:    VersionNum(version),
+		Data:       data,
+		InsertedAt: time.Now(),
 	}
 
 	// Check if the version already exists
