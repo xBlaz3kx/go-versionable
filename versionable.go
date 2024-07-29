@@ -118,7 +118,7 @@ func (vl *VersionList[Data]) Get(version int) (*Data, bool) {
 		return val.Version.Equals(version)
 	})
 
-	if isFound != -1 {
+	if isFound == -1 {
 		return nil, false
 	}
 

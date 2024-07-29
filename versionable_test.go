@@ -55,6 +55,7 @@ func TestVersionList_GetLatest(t *testing.T) {
 	latest, err := list.GetLatest()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "test2", latest.Data)
+	assert.EqualValues(t, 3, latest.Version)
 
 	list = NewVersionList[string]()
 	_, err = list.GetLatest()
