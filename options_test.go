@@ -1,15 +1,15 @@
 package go_versionable
 
 import (
-	"reflect"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestVersionList_Add_WithLimit(t *testing.T) {
 	list := NewVersionList[string](WithLimit[string](2))
-
+	currentTime := time.Now()
 	err := list.Add("test")
 	assert.NoError(t, err)
 
@@ -21,7 +21,9 @@ func TestVersionList_Add_WithLimit(t *testing.T) {
 
 	versionList := list.GetAll()
 	expectedList := []Version[string]{{Version: 1, Data: "test"}, {Version: 2, Data: "test2"}}
-	if !reflect.DeepEqual(list.GetAll(), expectedList) {
-		t.Errorf("Expected %v, got %v", expectedList, versionList)
+	for i, version := range versionList {
+		assert.EqualValues(t, expectedList[i].Data, version.Data)
+		assert.EqualValues(t, expectedList[i].Version, version.Version)
+		assert.InDelta(t, currentTime.Second(), version.InsertedAt.Second(), 1)
 	}
 }
