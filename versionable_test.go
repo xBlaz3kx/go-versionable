@@ -11,19 +11,13 @@ func TestVersionList_Add(t *testing.T) {
 	list := NewVersionList[string]()
 
 	err := list.Add("test")
-	if err != nil {
-		t.Error("Expected nil, got error")
-	}
+	assert.NoError(t, err)
 
 	err = list.Add("test2")
-	if err != nil {
-		t.Error("Expected nil, got error")
-	}
+	assert.NoError(t, err)
 
 	err = list.Add("test3")
-	if err != nil {
-		t.Error("Expected nil, got error")
-	}
+	assert.NoError(t, err)
 
 	versionList := list.GetAll()
 	expectedList := []Version[string]{{1, "test"}, {2, "test2"}, {3, "test3"}}

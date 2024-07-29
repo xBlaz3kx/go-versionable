@@ -4,8 +4,8 @@ package go_versionable
 type Option[Data comparable] func(*VersionList[Data])
 
 // WithLimit sets the limit of total versions stored in the list
-func WithLimit(limit int) func(*VersionList[any]) {
-	return func(vl *VersionList[any]) {
+func WithLimit[Data comparable](limit int) func(*VersionList[Data]) {
+	return func(vl *VersionList[Data]) {
 		vl.limit = &limit
 	}
 }
