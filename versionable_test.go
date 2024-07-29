@@ -1,8 +1,8 @@
 package go_versionable
 
 import (
-	"reflect"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -10,6 +10,7 @@ import (
 func TestVersionList_Add(t *testing.T) {
 	list := NewVersionList[string]()
 
+	currentTime := time.Now()
 	err := list.Add("test")
 	assert.NoError(t, err)
 
@@ -20,14 +21,16 @@ func TestVersionList_Add(t *testing.T) {
 	assert.NoError(t, err)
 
 	versionList := list.GetAll()
-	expectedList := []Version[string]{{1, "test"}, {2, "test2"}, {3, "test3"}}
-	if !reflect.DeepEqual(list.GetAll(), expectedList) {
-		t.Errorf("Expected %v, got %v", expectedList, versionList)
+	expectedList := []Version[string]{{Version: 1, Data: "test", InsertedAt: currentTime}, {Version: 2, Data: "test2", InsertedAt: currentTime}, {Version: 3, Data: "test3", InsertedAt: currentTime}}
+	for i, version := range versionList {
+		assert.EqualValues(t, expectedList[i].Data, version.Data)
+		assert.EqualValues(t, expectedList[i].Version, version.Version)
+		assert.InDelta(t, currentTime.Second(), version.InsertedAt.Second(), 1)
 	}
 }
 
 func TestVersionList_Get(t *testing.T) {
-	nodeList := []Version[string]{{1, "test"}, {2, "test1"}, {3, "test2"}}
+	nodeList := []Version[string]{{Version: 1, Data: "test"}, {Version: 2, Data: "test1"}, {Version: 3, Data: "test2"}}
 	list := NewFromVersions[string](nodeList)
 
 	data, isFound := list.Get(1)
@@ -43,7 +46,7 @@ func TestVersionList_Get(t *testing.T) {
 }
 
 func TestVersionList_GetLatest(t *testing.T) {
-	nodeList := []Version[string]{{1, "test"}, {2, "test1"}, {3, "test2"}}
+	nodeList := []Version[string]{{Version: 1, Data: "test"}, {Version: 2, Data: "test1"}, {Version: 3, Data: "test2"}}
 	list := NewFromVersions[string](nodeList)
 
 	latest, err := list.GetLatest()
@@ -58,7 +61,7 @@ func TestVersionList_GetLatest(t *testing.T) {
 }
 
 func TestVersionList_GetVersions(t *testing.T) {
-	nodeList := []Version[string]{{1, "test"}, {2, "test1"}, {3, "test2"}}
+	nodeList := []Version[string]{{Version: 1, Data: "test"}, {Version: 2, Data: "test1"}, {Version: 3, Data: "test2"}}
 	list := NewFromVersions[string](nodeList)
 
 	versions := list.GetAll()
@@ -66,7 +69,7 @@ func TestVersionList_GetVersions(t *testing.T) {
 }
 
 func TestVersionList_Remove(t *testing.T) {
-	nodeList := []Version[string]{{1, "test"}, {2, "test1"}, {3, "test2"}}
+	nodeList := []Version[string]{{Version: 1, Data: "test"}, {Version: 2, Data: "test1"}, {Version: 3, Data: "test2"}}
 	list := NewFromVersions[string](nodeList)
 
 	err := list.Remove(2)
